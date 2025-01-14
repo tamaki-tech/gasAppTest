@@ -15,9 +15,10 @@ function doPost(e) {
   const messageText = json.events[0].message.text;
 
   // 検証で200を返すための取り組み
-  if (typeof reply_token === "underfined") {
+  if (reply_token == null) {
     return;
   }
+
   const option = {
     headers: {
       "Content-Type": "application/json; charset=UTF-8",
