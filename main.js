@@ -1,4 +1,3 @@
-// LINE developersのメッセージ送受信設定に記載のアクセストークン
 const LINE_TOKEN =
   PropertiesService.getScriptProperties().getProperty("LINE_TOKEN"); // Messaging API設定の一番下で発行できるLINE Botのアクセストークン
 const OPENAI_API_KEY =
@@ -13,8 +12,12 @@ const MAX_TOKENS = 500;
  * OpenAIへリクエストを投げてAIの解答を取得する
  */
 const postOpenAI = (message) => {
-  // LINEのメッセージをChatGPTにメッセージ
-  const messages = [{ role: "user", content: message }];
+  const messages = [
+    {
+      role: "user",
+      content: `言語聴覚士の優秀な講師です。国家試験に関わる質問について答えてください。ただし、中学生でもわかるような解説をしてください。${message} 返答は400文字くらいで簡潔に返答して`,
+    },
+  ];
   const headers = {
     Authorization: "Bearer " + OPENAI_API_KEY,
     "Content-type": "application/json",
@@ -42,6 +45,8 @@ const doPost = (e) => {
   const replyToken = json.events[0].replyToken;
   const messageType = json.events[0].message.type;
   const messageText = json.events[0].message.text;
+
+  // TODO スプレッドシート連携して契約ユーザじゃなかったら弾く
 
   if (replyToken == null) return;
   if (messageType !== "text") return;
